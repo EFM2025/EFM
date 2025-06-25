@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistema de Mantenimiento</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script>
+    // Usuarios autorizados (correo y contraseña)
+    const usuarios = [
+      { correo: "Jose.ZAmora@efm.com", password: "zamora123" }
+    ];
+
+    let usuarioActual = null;
+
+    function login(e) {
+      e.preventDefault();
+      const correo = document.getElementById("correo").value;
+      const password = document.getElementById("password").value;
+
+      const user = usuarios.find(u => u.correo === correo && u.password === password);
+
+      if (user) {
+        usuarioActual = correo;
+        document.getElementById("loginPanel").classList.add("hidden");
+        document.getElementById("mainPanel").classList.remove("hidden");
+        document.getElementById("usuarioNombre").textContent = correo;
+      } else {
+        alert("Correo o contraseña incorrectos");
+      }
+    }
+
+    function enviarFormulario(idFormulario) {
+      const form = document.getElementById(idFormulario);
+      const datos = new FormData(form);
+      datos.append("usuario", usuarioActual);
+      alert("[DEMO] Datos enviados (no conectado a Google Sheets todavía):\n" + [...datos.entries()].map(e => e.join(": ")).join("\n"));
+      form.reset();
+    }
+  </script>
+</head>
+<body class="bg-gray-100 font-sans">
+  <!-- Login Panel -->
+  <div id="loginPanel" class="min-h-screen flex items-center justify-center">
+    <div class="bg-white p-8 rounded-xl shadow-lg w-96">
+      <h2 class="text-2xl font-bold mb-4 text-center">Iniciar Sesión</h2>
+      <form onsubmit="login(event)">
+        <input type="email" id="correo" placeholder="Correo" class="w-full p-2 mb-4 border rounded" required />
+        <input type="password" id="password" placeholder="Contraseña" class="w-full p-2 mb-4 border rounded" required />
+        <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700">Entrar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Main Panel -->
+  <div id="mainPanel" class="hidden">
+    <div class="bg-blue-700 text-white p-4 flex justify-between items-center">
+      <h1 class="text-xl font-semibold">Sistema de Mantenimiento</h1>
+      <span>Usuario: <span id="usuarioNombre" class="font-bold"></span></span>
+    </div>
+
+    <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+
+      <!-- Formulario Tiempos Muertos -->
+      <div class="bg-white p-6 rounded-xl shadow-md">
+        <h2 class="text-lg font-bold mb-4">Registro de Tiempos Muertos</h2>
+        <form id="formTiempos" onsubmit="event.preventDefault(); enviarFormulario('formTiempos');">
+          <input type="date" name="fecha" class="w-full p-2 mb-2 border rounded" required />
+          <input type="text" name="hora" placeholder="Hora (ej: 7-8)" class="w-full p-2 mb-2 border rounded" required />
+          <input type="text" name="linea" placeholder="Línea" class="w-full p-2 mb-2 border rounded" required />
+          <input type="text" name="area" placeholder="Área" class="w-full p-2 mb-2 border rounded" required />
+          <input type="text" name="maquina" placeholder="Máquina" class="w-full p-2 mb-2 border rounded" required />
+          <input type="text" name="tipo_falla" placeholder="Tipo de Falla" class="w-full p-2 mb-2 border rounded" required />
+          <input type="number" name="tiempo_falla" placeholder="Tiempo generado (min)" class="w-full p-2 mb-2 border rounded" required />
+          <textarea name="medidas" placeholder="Medidas correctivas" class="w-full p-2 mb-2 border rounded"></textarea>
+          <textarea name="comentarios" placeholder="Comentarios / Recomendaciones" class="w-full p-2 mb-4 border rounded"></textarea>
+          <button type="submit" class="bg-green-600 text-white p-2 rounded w-full hover:bg-green-700">Guardar</button>
+        </form>
+      </div>
+
+      <!-- Formulario Requisición de Partes -->
+      <div class="bg-white p-6 rounded-xl shadow-md">
+        <h2 class="text-lg font-bold mb-4">Requisición de Partes</h2>
+        <form id="formRequisiciones" onsubmit="event.preventDefault(); enviarFormulario('formRequisiciones');">
+          <input type="date" name="fecha" class="w-full p-2 mb-2 border rounded" required />
+          <input type="text" name="area" placeholder="Área solicitante" class="w-full p-2 mb-2 border rounded" required />
+          <input type="text" name="material" placeholder="Nombre del material" class="w-full p-2 mb-2 border rounded" required />
+          <input type="number" name="cantidad" placeholder="Cantidad" class="w-full p-2 mb-2 border rounded" required />
+          <select name="urgencia" class="w-full p-2 mb-2 border rounded" required>
+            <option value="">Nivel de urgencia</option>
+            <option value="Baja">Baja</option>
+            <option value="Media">Media</option>
+            <option value="Alta">Alta</option>
+            <option value="Crítica">Crítica</option>
+          </select>
+          <textarea name="justificacion" placeholder="Justificación / Motivo" class="w-full p-2 mb-2 border rounded"></textarea>
+          <textarea name="comentarios" placeholder="Comentarios adicionales" class="w-full p-2 mb-4 border rounded"></textarea>
+          <button type="submit" class="bg-yellow-600 text-white p-2 rounded w-full hover:bg-yellow-700">Enviar</button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>
