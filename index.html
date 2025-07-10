@@ -10,26 +10,33 @@
     // Usuarios autorizados (correo y contraseña)
     const usuarios = [
       { correo: "Jose.Zamora@efm.com", password: "zamora123" }
+       { correo: "Roberto.Sandoval@efm.com", password: "sandoval123" }
     ];
 
     let usuarioActual = null;
 
-    function login(e) {
-      e.preventDefault();
-      const correo = document.getElementById("correo").value;
-      const password = document.getElementById("password").value;
 
-      const user = usuarios.find(u => u.correo === correo && u.password === password);
 
-      if (user) {
-        usuarioActual = correo;
-        document.getElementById("loginPanel").classList.add("hidden");
-        document.getElementById("mainPanel").classList.remove("hidden");
-        document.getElementById("usuarioNombre").textContent = correo;
-      } else {
-        alert("Correo o contraseña incorrectos");
-      }
-    }
+    
+
+function login(e) {
+  e.preventDefault();
+  const correo = document.getElementById("correo").value;
+  const password = document.getElementById("password").value;
+
+  const user = usuarios.find(u =>
+    u.correo.toLowerCase() === correo.toLowerCase() && u.password === password
+  );
+
+  if (user) {
+    usuarioActual = user.correo; // Puedes mantener el original con su casing
+    document.getElementById("loginPanel").classList.add("hidden");
+    document.getElementById("mainPanel").classList.remove("hidden");
+    document.getElementById("usuarioNombre").textContent = usuarioActual;
+  } else {
+    alert("Correo o contraseña incorrectos");
+  }
+}
 
     function enviarFormulario(idFormulario) {
       const form = document.getElementById(idFormulario);
